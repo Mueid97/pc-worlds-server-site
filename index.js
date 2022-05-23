@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+var jwt = require('jsonwebtoken');
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
@@ -36,8 +37,8 @@ async function run(){
         });
 
         app.get('/parchase', async (req, res)=>{
-            const clientName = req.query.clientName;
-            const query = {clientName: clientName};
+            const client = req.query.client;
+            const query = {client: client};
             const parchases = await parchaseCollection.find(query).toArray();
             res.send(parchases);
         });
@@ -52,7 +53,9 @@ async function run(){
             }
             const result =await parchaseCollection.insertOne(parchase);
             return res.send({success: true, result})
-        })
+        });
+
+
     }
     finally{
 
