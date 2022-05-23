@@ -18,6 +18,7 @@ async function run(){
     try{
         await client.connect();
         const productCollection = client.db('pcworldsdb').collection('products');
+        const parchaseCollection = client.db('pcworldsdb').collection('parchases');
 
 
         app.get('/product', async(req,res)=>{
@@ -33,6 +34,19 @@ async function run(){
             const product = await productCollection.findOne(query);
             res.send(product);
         });
+
+       
+
+        app.post('/parchase', async(req,res)=>{
+            const parchase = req.body;
+            const query= {productName: parchase.productName, email: parchase.email};
+            const exists= await parchaseCollection.findOne(query);
+            if(exists){
+               return res.send({success: false, parchase:exists})
+            }
+            const result =await parchaseCollection.insertOne(parchase);
+            return res.send({success: true, result})
+        })
     }
     finally{
 
