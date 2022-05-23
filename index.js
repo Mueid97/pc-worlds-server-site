@@ -35,6 +35,12 @@ async function run(){
             res.send(product);
         });
 
+        app.get('/parchase', async (req, res)=>{
+            const clientName = req.query.clientName;
+            const query = {clientName: clientName};
+            const parchases = await parchaseCollection.find(query).toArray();
+            res.send(parchases);
+        });
        
 
         app.post('/parchase', async(req,res)=>{
