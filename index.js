@@ -20,7 +20,8 @@ async function run(){
         await client.connect();
         const productCollection = client.db('pcworldsdb').collection('products');
         const parchaseCollection = client.db('pcworldsdb').collection('parchases');
-        const clientCollection = client.db('pcworldsdb').collection('clients');
+        
+        const userCollection = client.db('pcworldsdb').collection('users');
 
 
         app.get('/product', async(req,res)=>{
@@ -56,7 +57,7 @@ async function run(){
             return res.send({success: true, result})
         });
 
-        app.put('/client/:email', async (req,res)=>{
+        app.put('/user/:email', async (req,res)=>{
             const email = req.params.email;
             const user = req.body;
             const filter = {email: email};
@@ -64,8 +65,8 @@ async function run(){
             const updateDoc = {
                 $set: user,
             }
-            const result = await clientCollection.updateOne(filter, updateDoc, options);
-            const token = jwt.sign({email:email}, process.env.ACCESS_TOKEN,{ expiresIn: '1h' })
+            const result = await userCollection.updateOne(filter, updateDoc, options);
+            //const token = jwt.sign({email:email}, process.env.ACCESS_TOKEN,{ expiresIn: '1h' })
             res.send(result, token);
         })
 
